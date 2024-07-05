@@ -1,0 +1,4 @@
+/vendor
+/user/nostr-private.key
+/src/.phpunit.result.cache
+.phpunit.result.cache
