@@ -1,6 +1,6 @@
 # Aesop's Fables: A New Revised Version From Original Sources
 
-# Aesop's Fables: Life of Aesop
+## Aesop's Fables: Life of Aesop
 
 The Life and History of Æsop is involved, like that of Homer, the most
 famous of Greek poets, in much obscurity. Sardis, the capital of Lydia;
@@ -91,7 +91,7 @@ shepherd. As he could not run away, he was soon killed.
 
 Those who attempt to act in disguise are apt to overdo it.
 
-## Aesop's Fables: 
+### Aesop's Fables: stag
 
 A stag saw his shadow reflected in the water, and greatly admired the
 size of his horns, but felt angry with himself for having such weak
@@ -105,7 +105,7 @@ gloried in these antlers which have proved my destruction."
 
 What is most truly valuable is often underrated.
 
-## Aesop's Fables: 
+### Aesop's Fables: fox
 
 A fox entered the house of an actor, and, rummaging through all his
 properties, came upon a Mask, an admirable imitation of a human head. He

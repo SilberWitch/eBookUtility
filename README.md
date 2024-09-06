@@ -21,6 +21,6 @@ text that you want displayed as content
 ## topic2
 more text
 ```
-4. On the command line, write ```php createBook.php MyShortBookTitle.md "Author Name"``` and press Enter. Make sure to replace the filename with the short title you want to use and the author name with the name or npub of the person/entity that should be listed as the author in the 30040 event.
+4. On the command line, write ```php createBook.php MyShortBookTitle.md "Author Name" "book version"``` and press Enter. Make sure to replace the filename with the short title you want to use and the author name with the name or npub of the person/entity that should be listed as the author in the 30040 event. The book version is the edition, translation, etc. of the book.
 5. All of the event metadata will be added to the *eventsCreated.txt* file.
 6. The 30040 eventID will be sent to stdout (usually the command line) in the form of an njump hyperlink. The link will not work, if you wrote to a local relay, but you can still see the eventID.

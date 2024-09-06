@@ -8,12 +8,35 @@ use swentel\nostr\Event\Event;
 use swentel\nostr\CommandResultInterface;
 
 /**
+ * Gets the original title and the author and constructs a d tag, which it returns.
+ *
+ * @param string $title
+ * @param string $author # optional
+ * @param string $version # optional
+ * @return string $dTag
+ */
+function construct_d_tag($title, $author="unknown", $version="")
+{
+    $dTagAuthor = strval(preg_replace('/\s+/', '-', $author));
+    $dTagTitle = strval(preg_replace('/\s+/', '-', $title));
+
+    if(strlen($version) === 0){
+        $dTag = $dTagTitle . "-by-" . $dTagAuthor;
+    } else {
+        $dTagVersion = strval(preg_replace('/\s+/', '-', $version));
+        $dTag = $dTagTitle . "-by-" . $dTagAuthor . "-v-" . $dTagVersion;
+    }
+
+    return $dTag;
+}
+
+/**
  * Signs the note, reads the relays out of relays.yml and uses them to prepare a note
  *
  * @param Event $note
  * @return CommandResultInterface $result
  */
-function prepareEvent($note)
+function prepare_event_data($note)
 {
     $keyFile = getcwd()."/user/nostr-private.key";
     $privateKey = trim(file_get_contents($keyFile));
@@ -49,19 +72,15 @@ function prepareEvent($note)
  *
  * @param string $eventKind
  * @param string $eventID
- * @param string $title
- * @param string $shortTitle #optional
- * @param string $author #optional
+ * @param string $dTag
  * @return void
  */
-function printEventData($eventKind, $eventID, $title, $shortTitle="-----", $author="----")
+function print_event_data($eventKind, $eventID, $dTag)
 {
     $fullpath = getcwd()."/eventsCreated.yml";
     $fp = fopen($fullpath, "a");
         fwrite($fp, "event ID: ".$eventID.PHP_EOL);
         fwrite($fp, "  event kind: ".$eventKind.PHP_EOL);
-        fwrite($fp, "  event title: ".$title.PHP_EOL);
-        fwrite($fp, "  short title: ".$shortTitle.PHP_EOL);
-        fwrite($fp, "  author: ".$author.PHP_EOL.PHP_EOL);
+        fwrite($fp, "  d Tag: ".$dTag.PHP_EOL);
     fclose($fp);
 }

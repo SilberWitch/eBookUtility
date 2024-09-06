@@ -1,7 +1,5 @@
 <?php declare(strict_types=1);
 
-include 'BookEvent.php';
-include_once __DIR__.'/../vendor/autoload.php';
 use PHPUnit\Framework\TestCase;
 
 final class IntegrationTest extends TestCase
@@ -12,7 +10,7 @@ final class IntegrationTest extends TestCase
         $testArgv = ["createBook.php", $testFile, "Æsop"];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
-        $book->publish_book($book->get_book_arguments());
+        $book->publish_book();
         $this->assertTrue(true);
     }
 
@@ -24,7 +22,7 @@ final class IntegrationTest extends TestCase
         $testArgv = ["createBook.php", $testFile, "Æsop"];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
-        $book->publish_book($book->get_book_arguments());
+        $book->publish_book();
     }
 
     public function testSourcefileHasOneHeaderLevel(): void
@@ -35,7 +33,7 @@ final class IntegrationTest extends TestCase
         $testArgv = ["createBook.php", $testFile, "Æsop"];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
-        $book->publish_book($book->get_book_arguments());
+        $book->publish_book();
     }
 
     public function testSourcefileHasNoHeaders(): void
@@ -46,7 +44,7 @@ final class IntegrationTest extends TestCase
         $testArgv = ["createBook.php", $testFile, "Æsop"];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
-        $book->publish_book($book->get_book_arguments());
+        $book->publish_book();
     }
 
     public function testRelayListIsEmpty(): void
@@ -64,7 +62,7 @@ final class IntegrationTest extends TestCase
         $testArgv = ["createBook.php", $testFile, "Æsop"];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
-        $book->publish_book($book->get_book_arguments());
+        $book->publish_book();
 
         $this->assertTrue(true);
 

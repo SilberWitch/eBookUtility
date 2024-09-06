@@ -1,6 +1,6 @@
-# Aesop's Fables: A New Revised Version From Original Sources
+# Aesop's Fables
 
-## Aesop's Fables: Life of Aesop
+## Life of Aesop
 
 The Life and History of Æsop is involved, like that of Homer, the most
 famous of Greek poets, in much obscurity. Sardis, the capital of Lydia;
@@ -80,7 +80,7 @@ universally condemned as false, puerile, and unauthentic. It is given up
 in the present day, by general consent, as unworthy of the slightest
 credit.
 
-## Aesop's Fables: The Wolf Turned Shepherd.
+## The Wolf Turned Shepherd
 
 A wolf, finding that the sheep were so afraid of him that he could not
 get near them, disguised himself in the dress of a shepherd, and thus
@@ -91,7 +91,7 @@ shepherd. As he could not run away, he was soon killed.
 
 Those who attempt to act in disguise are apt to overdo it.
 
-## Aesop's Fables: 
+## The Stag and the Lion
 
 A stag saw his shadow reflected in the water, and greatly admired the
 size of his horns, but felt angry with himself for having such weak
@@ -105,7 +105,7 @@ gloried in these antlers which have proved my destruction."
 
 What is most truly valuable is often underrated.
 
-## Aesop's Fables: 
+## The Fox and the Actor
 
 A fox entered the house of an actor, and, rummaging through all his
 properties, came upon a Mask, an admirable imitation of a human head. He
@@ -114,7 +114,7 @@ no value, as it entirely wants brains."
 
 A fair face is of little use without sense.
 
-## Aesop's Fables: The Bear and the Fox.
+## The Bear and the Fox
 
 A bear boasted very much of his philanthropy, saying "that of all
 animals he was the most tender in his regard for man, for he had such
@@ -124,7 +124,7 @@ eat the dead and not the living!"
 
 We should not wait till a person is dead, to give him our respect.
 
-## Aesop's Fables: The Wolf and the Lamb.
+## The Wolf and the Lamb
 
 A Wolf, meeting with a Lamb astray from the fold, resolved not to lay
 violent hands on him, but to find some plea, which should justify to the
@@ -142,7 +142,7 @@ The tyrant will always find a pretext for his tyranny, and it is useless
 for the innocent to try by reasoning to get justice, when the oppressor
 intends to be unjust.
 
-## Aesop's Fables: The One-Eyed Doe.
+## The One-Eyed Doe
 
 A Doe, blind of an eye, was accustomed to graze as near to the edge of
 the sea as she possibly could, to secure greater safety. She turned her

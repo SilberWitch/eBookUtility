@@ -5,3 +5,4 @@
 .phpunit.cache/
 composer.lock
 test*.php
+/.vscode

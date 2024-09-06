@@ -11,7 +11,7 @@ echo PHP_EOL;
 $book = new BookEvent();
 $book->set_book_arguments($argv);
 try {
-    $book->publish_book($book->get_book_arguments());
+    $book->publish_book();
     echo "The book has been written.".PHP_EOL.PHP_EOL;
 } catch (Exception $e) {
     echo $e->getMessage().PHP_EOL.PHP_EOL;

@@ -1,132 +1,84 @@
 <?php
 
 use swentel\nostr\Event\Event;
-include 'helperFunctions.php';
+include_once 'helperFunctions.php';
+include_once 'SectionEvent.php';
 
 class BookEvent{
 
 // Properties
 
 public $bookArguments;
-public $shortTitle;
-public $title;
-public $author;
-public $articles = array();
+public $bookDTag;
+public $bookTitle;
+public $bookAuthor;
+public $bookVersion;
+public $sectionEvents = array();
 
 // Methods
 
 function set_book_arguments($bookArguments) {
   $this->bookArguments = $bookArguments;
 }
+
 function get_book_arguments() {
   return $this->bookArguments;
 }
 
-  function set_short_title($shortTitle) {
-    $this->shortTitle = $shortTitle;
-  }
-  function get_short_title() {
-    return $this->shortTitle;
-  }
-  function set_title($title) {
-    $this->title = $title;
-  }
-  function get_title() {
-    return $this->title;
-  }
+function set_book_d_tag($bookDTag) {
+  $this->bookDTag = $bookDTag;
+}
 
-  function set_author($author) {
-    $this->author = $author;
-  }
-  function get_author() {
-    return $this->author;
-  }
-  function set_articles($articles) {
-    $this->articles[] = $articles;
-  }
-  function get_articles() {
-    return $this->articles;
-  }
+function get_book_d_tag() {
+  return $this->bookDTag;
+}
 
-/**
- * Create a header event and hang on the associated article events
- * Returns the eventID for the article event.
- *
- * @param string $title
- * @param string $sectionContent
- * @return string $resultID
- */
-function create_articles($title, $sectionContent)
-{
-  $note = new Event();
-  $note->setContent($sectionContent);
-  $note->setKind(30041);
-  $note->setTags([
-    ['d', $this->title],
-    ['title', $this->title],
-  ]);
+function set_book_title($bookTitle) {
+  $this->bookTitle = $bookTitle;
+}
 
-  $result = prepareEvent($note);
-  $resultID = $result->getEventID();
+function get_book_title() {
+  return $this->bookTitle;
+}
 
-  // check if the eventID was issued retry and then fail
-  (empty($resultID)) ? ($resultID = $result->getEventID()) : $resultID;
-  (empty($resultID)) ? throw new InvalidArgumentException('The article eventID was not created') : $resultID;
-  
+function set_book_author($bookAuthor) {
+  $this->bookAuthor = $bookAuthor;
+}
 
-  echo "Published 30041 event with ID ".$resultID.PHP_EOL;
-  printEventData("30041", $resultID, $this->title);
-  return $resultID;
+function get_book_author() {
+  return $this->bookAuthor;
+}
+
+function set_book_version($bookVersion) {
+  $this->bookVersion = $bookVersion;
+}
+
+function get_book_version() {
+  return $this->bookVersion;
+}
+
+function set_section_events($sectionEvents) {
+  $this->sectionEvents[] = $sectionEvents;
+}
+
+function get_section_events() {
+  return $this->sectionEvents;
 }
 
 /**
- * Create a header event and hang on the associated article events.
- * Returns the header event ID.
- *
- * @param string $shortTitle
- * @param string $title
- * @param string $author
- * @param array $articles
- * @return string $resultID
- */
-function create_book($shortTitle, $title, $author, $articles)
-{
-  $tags[] = ['d', $this->shortTitle];
-  foreach ($this->articles as &$etags) {
-    $tags[] = ['e', $etags];
-  }
-
-  $note = new Event();
-  $note->setContent("{\"title\": \"$this->title\", \"author\": \"$this->author\"}");
-  $note->setKind(30040);
-  $note->setTags($tags);
-
-  $result = prepareEvent($note);
-  $resultID = $result->getEventID();
-  
-  // check if the eventID was issued retry and then fail
-  (empty($resultID)) ? ($resultID = $result->getEventID()) : $resultID;
-  (empty($resultID)) ? throw new InvalidArgumentException('The header eventID was not created') : $resultID;
-
-
-  echo "Published 30040 event with ID ".$resultID.PHP_EOL.PHP_EOL;
-  printEventData("30040", $resultID, $this->title, $this->shortTitle, $this->author);
-  return $resultID;
-}
-
-/**
- * Create a header event and hang on the associated article events
- * Returns the eventID for the article event.
+ * Create a header event and hang on the associated section events
+ * Returns the eventID for the section event.
  *
  * @return void
  */
-function publish_book($bookArguments)
+function publish_book()
 {
 
     $markdown = "unset";
     $markdown = file_get_contents($this->bookArguments[1]);
-    $this->set_author($this->bookArguments[2]);
-
+    $this->set_book_author($this->bookArguments[2]);
+    $this->set_book_version($this->bookArguments[3]);
+    
     // check if the file contains too many header levels
     (stripos($markdown,'###') !== false) ? throw new InvalidArgumentException('This markdown file contains too many header levels. Please correct down to 2 levels and retry.') : $markdown;
 
@@ -136,30 +88,79 @@ function publish_book($bookArguments)
     // check if the file contains too few header levels
     (count($markdownFormatted) === 1) ? throw new InvalidArgumentException('This markdown file contain no headers or only one level of headers. Please add a second level and retry.') : $markdownFormatted;
 
-    $this->set_short_title(trim($this->bookArguments[1], ".md"));
-    $bookTitle = array_shift($markdownFormatted);
-    $this->set_title(trim(trim($bookTitle, "# ")));
+    $bookTitle= array_shift($markdownFormatted);
+    $this->set_book_title(trim(trim($bookTitle, "# ")));
+
+    $title = $this->get_book_title();
+    $author = $this->get_book_author();
+    $version = $this->get_book_version();
+    $dTag = construct_d_tag($title, $author, $version); 
+    $this->set_book_d_tag($dTag);
 
     echo PHP_EOL;
 
-    // write the 30041s from the ## sections and add the eventID to the articles array
-
+    // write the 30041s from the ## sections and add the eventID to the section array
+     
     foreach ($markdownFormatted as &$section) {
+      
+      $nextSection = new SectionEvent();
+        $nextSection->set_section_author($this->bookAuthor);
+        $nextSection->set_section_title(trim(substr(strval($section), 0, strpos(strval($section), PHP_EOL))));
+        $nextSection->set_section_d_tag(construct_d_tag($nextSection->get_section_title(), $nextSection->get_section_author()));
+        $nextSection->set_section_content(trim(strval($section), $nextSection->get_section_title()));
+        $nextSection->set_section_content(trim($nextSection->get_section_content()));
+        
+        $this->set_section_events($nextSection->create_section());
 
-        $sectionTitle = trim(substr($section, 0, strpos($section, PHP_EOL)));
-        $sectionContent = trim($section, $sectionTitle);
-        $sectionEventID = $this->create_articles($sectionTitle, $sectionContent);
-
-        $this->set_articles($sectionEventID);
-    }
+      }
 
     // write the 30040 and add the new 30041s
-    $headerID = $this->create_book($this->get_short_title(), $this->get_title(), $this->get_author(), $this->get_articles());
+    $headerID = $this->create_book();
 
     // print a njump hyperlink to the 30040
     print "https://njump.me/".$headerID.PHP_EOL;
 
     return;
+}
+
+/**
+ * Create a header event and hang on the associated section events.
+ * Returns the header event ID.
+ *
+ * @param BookEvent
+ * @return string $resultID
+ */
+function create_book()
+{
+  $kind = "30040";
+
+  $tags[] = ['d', $this->get_book_d_tag()];
+  $tags[] = ['title', $this->get_book_title()];
+  $tags[] = ['author', $this->get_book_author()];
+  $tags[] = ['version', $this->get_book_version()];
+  foreach ($this->get_section_events() as &$etags) {
+    $tags[] = ['e', $etags];
+  }
+
+  $note = new Event();
+  $note->setKind($kind);
+  $note->setTags($tags);
+
+  $event = prepare_event_data($note);
+
+  // issue the eventID, pause to prevent the relay from balking, and retry on fail
+  $i = 0;
+  do {
+    $eventID = $event->getEventID();
+    $i++;
+    sleep(5);
+  } while (($i <= 10) && empty($eventID));
+
+  (empty($eventID)) ? throw new InvalidArgumentException('The book eventID was not created') : $eventID;
+
+  echo "Published".$kind." event with ID ".$eventID.PHP_EOL.PHP_EOL;
+  print_event_data($kind, $eventID, $this->get_book_d_tag());
+  return $eventID;
 }
 
 }
