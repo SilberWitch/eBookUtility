@@ -17,13 +17,19 @@ use swentel\nostr\CommandResultInterface;
  */
 function construct_d_tag($title, $author="unknown", $version="")
 {
+    // normalize the strings for the d tag
+    $title = strtolower(preg_replace("/[^a-zA-Z0-9\s,-]/", "", $title));
+    $author = strtolower(preg_replace("/[^a-zA-Z0-9\s,-]/", "", $author));
+    $version = strtolower(preg_replace("/[^a-zA-Z0-9\s,-]/", "", $version));
+
+    // replace the spaces with dashes
     $dTagAuthor = strval(preg_replace('/\s+/', '-', $author));
     $dTagTitle = strval(preg_replace('/\s+/', '-', $title));
+    $dTagVersion = strval(preg_replace('/\s+/', '-', $version));
 
     if(strlen($version) === 0){
         $dTag = $dTagTitle . "-by-" . $dTagAuthor;
     } else {
-        $dTagVersion = strval(preg_replace('/\s+/', '-', $version));
         $dTag = $dTagTitle . "-by-" . $dTagAuthor . "-v-" . $dTagVersion;
     }
 
@@ -36,7 +42,7 @@ function construct_d_tag($title, $author="unknown", $version="")
  * @param Event $note
  * @return CommandResultInterface $result
  */
-function prepare_event_data($note)
+function prepare_event_data($note): array
 {
     $keyFile = getcwd()."/user/nostr-private.key";
     $privateKey = trim(file_get_contents($keyFile));
@@ -45,7 +51,7 @@ function prepare_event_data($note)
     (str_starts_with($privateKey, 'nsec') === false) ? throw new InvalidArgumentException('Please place your nsec in the nostr-private.key file.') : $privateKey;
 
     $relaysFile = getcwd()."/user/relays.yml";
-    $relaysRead=array();
+    $relaysRead = array();
     $relaysRead = file($relaysFile, FILE_IGNORE_NEW_LINES);
     (empty($relaysRead)) ? ($relaysRead = ["wss://thecitadel.nostr1.com"]) : $relaysRead;
 

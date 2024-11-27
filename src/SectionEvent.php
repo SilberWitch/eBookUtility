@@ -1,6 +1,7 @@
 <?php
 
 use swentel\nostr\Event\Event;
+
 include_once 'helperFunctions.php';
 include_once 'BookEvent.php';
 class SectionEvent{
@@ -10,9 +11,17 @@ class SectionEvent{
 public $sectionDTag;
 public $sectionTitle;
 public $sectionAuthor;
+public $sectionVersion;
 public $sectionContent;
 
 // Methods
+
+function set_section_version($sectionVersion) {
+  $this->sectionVersion = $sectionVersion;
+}
+function get_section_version() {
+  return $this->sectionVersion;
+}
 
 function set_section_d_tag($sectionDTag) {
   $this->sectionDTag = $sectionDTag;
@@ -61,12 +70,12 @@ function create_section()
     ['author', $this->get_section_author()],
   ]);
 
-  $event = prepare_event_data($note);
+  prepare_event_data($note);
 
   // issue the eventID, pause to prevent the relay from balking, and retry on fail
   $i = 0;
   do {
-    $eventID = $event->getEventID();
+    $eventID = $note->getId();
     $i++;
     sleep(5);
   } while (($i <= 10) && empty($eventID));

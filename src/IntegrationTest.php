@@ -1,13 +1,16 @@
 <?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+include_once 'helperFunctions.php';
+include_once 'SectionEvent.php';
+include_once 'BookEvent.php';
 
 final class IntegrationTest extends TestCase
 {
     public function testSourcefileHasTwoHeaderLevels(): void
     {
-        $testFile =  getcwd()."/src/testdata/AesopsFables_2Headers.md";
-        $testArgv = ["createBook.php", $testFile, "Æsop"];
+        $testFile =  getcwd()."/src/testdata/AesopsFables_2Headers.adoc";
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
@@ -18,8 +21,8 @@ final class IntegrationTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $testFile =  getcwd()."/src/testdata/AesopsFables_3Headers.md";
-        $testArgv = ["createBook.php", $testFile, "Æsop"];
+        $testFile =  getcwd()."/src/testdata/AesopsFables_3Headers.adoc";
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
@@ -29,8 +32,8 @@ final class IntegrationTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $testFile =  getcwd()."/src/testdata/AesopsFables_1Header.md";
-        $testArgv = ["createBook.php", $testFile, "Æsop"];
+        $testFile =  getcwd()."/src/testdata/AesopsFables_1Header.adoc";
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
@@ -40,8 +43,8 @@ final class IntegrationTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $testFile =  getcwd()."/src/testdata/AesopsFables_0Headers.md";
-        $testArgv = ["createBook.php", $testFile, "Æsop"];
+        $testFile =  getcwd()."/src/testdata/AesopsFables_0Headers.adoc";
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
@@ -58,8 +61,8 @@ final class IntegrationTest extends TestCase
         file_put_contents($relaysFile, "");
 
         // make sure that book can still be printed using the default Citadel relay.
-        $testFile =  getcwd()."/src/testdata/AesopsFables_2Headers.md";
-        $testArgv = ["createBook.php", $testFile, "Æsop"];
+        $testFile =  getcwd()."/src/testdata/AesopsFables_2Headers.adoc";
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();

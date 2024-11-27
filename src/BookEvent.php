@@ -66,7 +66,7 @@ function get_section_events() {
 }
 
 /**
- * Create a header event and hang on the associated section events
+ * Create an index event and hang on the associated section events
  * Returns the eventID for the section event.
  *
  * @return void
@@ -80,16 +80,16 @@ function publish_book()
     $this->set_book_version($this->bookArguments[3]);
     
     // check if the file contains too many header levels
-    (stripos($markdown,'###') !== false) ? throw new InvalidArgumentException('This markdown file contains too many header levels. Please correct down to 2 levels and retry.') : $markdown;
+    (stripos($markdown,'===') !== false) ? throw new InvalidArgumentException('This markdown file contains too many header levels. Please correct down to 2 levels and retry.') : $markdown;
 
     // break the file into metadata and sections
-    $markdownFormatted = explode("##", $markdown);
+    $markdownFormatted = explode("==", $markdown);
 
     // check if the file contains too few header levels
     (count($markdownFormatted) === 1) ? throw new InvalidArgumentException('This markdown file contain no headers or only one level of headers. Please add a second level and retry.') : $markdownFormatted;
 
     $bookTitle= array_shift($markdownFormatted);
-    $this->set_book_title(trim(trim($bookTitle, "# ")));
+    $this->set_book_title(trim(trim($bookTitle, "= ")));
 
     $title = $this->get_book_title();
     $author = $this->get_book_author();
@@ -99,33 +99,34 @@ function publish_book()
 
     echo PHP_EOL;
 
-    // write the 30041s from the ## sections and add the eventID to the section array
-     
+    // write the 30041s from the == sections and add the eventID to the section array
+    
+    $sectionNum = 0;
     foreach ($markdownFormatted as &$section) {
-      
+      $sectionNum++;
+      $sectionTitle = trim(strstr($section, "\n", true));
       $nextSection = new SectionEvent();
         $nextSection->set_section_author($this->bookAuthor);
-        $nextSection->set_section_title(trim(substr(strval($section), 0, strpos(strval($section), PHP_EOL))));
-        $nextSection->set_section_d_tag(construct_d_tag($nextSection->get_section_title(), $nextSection->get_section_author()));
-        $nextSection->set_section_content(trim(strval($section), $nextSection->get_section_title()));
-        $nextSection->set_section_content(trim($nextSection->get_section_content()));
-        
-        $this->set_section_events($nextSection->create_section());
+        $nextSection->set_section_version($this->bookVersion);
+                $nextSection->set_section_title($sectionTitle);
+        $nextSection->set_section_d_tag(construct_d_tag($this->get_book_title()."-".$nextSection->get_section_title()."-".$sectionNum, $nextSection->get_section_author(), $nextSection->get_section_version()));
+        $nextSection->set_section_content(trim(trim(strval($section), $sectionTitle)));
+      $this->set_section_events($nextSection->create_section());
 
       }
 
     // write the 30040 and add the new 30041s
-    $headerID = $this->create_book();
+    $indexID = $this->create_book();
 
     // print a njump hyperlink to the 30040
-    print "https://njump.me/".$headerID.PHP_EOL;
+    print "https://njump.me/".$indexID.PHP_EOL;
 
     return;
 }
 
 /**
- * Create a header event and hang on the associated section events.
- * Returns the header event ID.
+ * Create an index event and hang on the associated section events.
+ * Returns the index event ID.
  *
  * @param BookEvent
  * @return string $resultID
@@ -145,20 +146,21 @@ function create_book()
   $note = new Event();
   $note->setKind($kind);
   $note->setTags($tags);
+  $note->setContent("");
 
-  $event = prepare_event_data($note);
+  prepare_event_data($note);
 
   // issue the eventID, pause to prevent the relay from balking, and retry on fail
   $i = 0;
   do {
-    $eventID = $event->getEventID();
+    $eventID = $note->getId();
     $i++;
     sleep(5);
   } while (($i <= 10) && empty($eventID));
 
   (empty($eventID)) ? throw new InvalidArgumentException('The book eventID was not created') : $eventID;
 
-  echo "Published".$kind." event with ID ".$eventID.PHP_EOL.PHP_EOL;
+  echo "Published ".$kind." event with ID ".$eventID.PHP_EOL.PHP_EOL;
   print_event_data($kind, $eventID, $this->get_book_d_tag());
   return $eventID;
 }
