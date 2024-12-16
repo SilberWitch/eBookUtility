@@ -75,11 +75,13 @@ function publish_book()
 {
 
     $markdown = "unset";
+    // TODO: add check if filename exists and return appropriate error.
     $markdown = file_get_contents($this->bookArguments[1]);
     $this->set_book_author($this->bookArguments[2]);
     $this->set_book_version($this->bookArguments[3]);
     
     // check if the file contains too many header levels
+    // TODO: account for blocks and tables with ==== delimeters
     (stripos($markdown,'===') !== false) ? throw new InvalidArgumentException('This markdown file contains too many header levels. Please correct down to 2 levels and retry.') : $markdown;
 
     // break the file into metadata and sections
@@ -139,6 +141,7 @@ function create_book()
   $tags[] = ['title', $this->get_book_title()];
   $tags[] = ['author', $this->get_book_author()];
   $tags[] = ['version', $this->get_book_version()];
+  $tags[] = ['type', 'book'];
   foreach ($this->get_section_events() as &$etags) {
     $tags[] = ['e', $etags];
   }
