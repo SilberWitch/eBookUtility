@@ -75,17 +75,16 @@ function publish_book()
 {
 
     $markdown = "unset";
-    // TODO: add check if filename exists and return appropriate error.
+    if(!$markdown = file_get_contents($this->bookArguments[1])) throw new InvalidArgumentException('The file could not be found.');
     $markdown = file_get_contents($this->bookArguments[1]);
     $this->set_book_author($this->bookArguments[2]);
     $this->set_book_version($this->bookArguments[3]);
     
     // check if the file contains too many header levels
-    // TODO: account for blocks and tables with ==== delimeters
-    (stripos($markdown,'===') !== false) ? throw new InvalidArgumentException('This markdown file contains too many header levels. Please correct down to 2 levels and retry.') : $markdown;
+    (stripos($markdown,'=== ') !== false) ? throw new InvalidArgumentException('This markdown file contains too many header levels. Please correct down to 2 levels and retry.') : $markdown;
 
     // break the file into metadata and sections
-    $markdownFormatted = explode("==", $markdown);
+    $markdownFormatted = explode("== ", $markdown);
 
     // check if the file contains too few header levels
     (count($markdownFormatted) === 1) ? throw new InvalidArgumentException('This markdown file contain no headers or only one level of headers. Please add a second level and retry.') : $markdownFormatted;
