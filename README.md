@@ -12,8 +12,9 @@ Then run ```composer install``` to download the dependencies to a *vendor* folde
 ## Directions
 
 1. Open the folder *user*, create the file *nostr-private.key* and add your nsec to it.
-2. Then edit the file *relays.yml* containing your list of relays. We recommend keeping wss://thecitadel.nostr1.com in your list and adding at least one other, that you have write access to. If you remove all relays, the Citadel relay will be used as default.
-3. Return to the main/upper folder, create an Asciidoc file entitled something like *MyShortBookTitle.adoc* and have it formatted with precisely two levels of headers.
+2. Then edit the file *relays.yml* containing your list of relays. We recommend keeping wss://thecitadel.nostr1.com in your list and adding at least one other, that you have write access to. If you remove all relays, the Citadel relay will be used as default. ```a``` tags will always contain thecitadel relay as relay hint.
+3. Decide whether you want your 30040 index to contain ```e``` tags or the newer ```a``` tag version (according to NIP-62). This is denoted by adding the corresponding letter to the end of the command line arguments. I recommend using ```a```.
+4. Return to the main/upper folder, create an Asciidoc file entitled something like *MyShortBookTitle.adoc* and have it formatted with precisely two levels of headers.
 
 ```
 = title you want as the full book title (mind the space after the hashtag)
@@ -23,9 +24,9 @@ text that you want displayed as content
 more text
 ```
 
-4. On the command line, write ```php createBook.php MyShortBookTitle.adoc "Author Name" "book version"``` and press Enter. Make sure to replace the filename with the short title you want to use and the author name with the name or npub of the person/entity that should be listed as the author in the 30040 event. The book version is the edition, translation, etc. of the book.
-5. All of the event metadata will be added to the *eventsCreated.txt* file.
-6. The 30040 eventID will be sent to stdout (usually the command line) in the form of an njump hyperlink. The link will not work, if you wrote to a local relay, but you can still see the eventID.
+5. On the command line, write ```php createBook.php MyShortBookTitle.adoc "Author Name" "book version" a``` and press Enter. Make sure to replace the filename with the short title you want to use and the author name with the name or npub of the person/entity that should be listed as the author in the 30040 event. The book version is the edition, translation, etc. of the book. The _a_ denotes that you want the replaceable ```a``` tags.
+6. All of the event metadata will be added to the *eventsCreated.txt* file.
+7. The 30040 eventID will be sent to stdout (usually the command line) in the form of an njump hyperlink. The link will not work, if you wrote to a local relay, but you can still see the eventID.
 
 ## Integration Test
 

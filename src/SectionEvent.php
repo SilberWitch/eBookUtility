@@ -54,11 +54,11 @@ function get_section_content() {
 
 /**
  * Create a section event.
- * Returns the eventID for the section event.
+ * Returns the array containing the ID and d-tag for the section event.
  *
- * @return string $eventID
+ * @return array $result
  */
-function create_section()
+function create_section(): array
 {
   $kind = "30041";
   $note = new Event();
@@ -81,10 +81,16 @@ function create_section()
   } while (($i <= 10) && empty($eventID));
 
   (empty($eventID)) ? throw new InvalidArgumentException('The section eventID was not created') : $eventID;
-  
+ 
+  $result = array(
+    "eventID" => $eventID,
+    "dTag" => $this->get_section_d_tag()
+  );
+
   echo "Published ".$kind." event with ID ".$eventID.PHP_EOL;
-  print_event_data($kind, $eventID, $this->get_section_d_tag());
-  return $eventID;
+  print_event_data($kind, $eventID, $this->get_section_d_tag());  
+ 
+  return $result;
 
 }
 

@@ -1,6 +1,7 @@
 <?php
 
 use swentel\nostr\Event\Event;
+use swentel\nostr\Key\Key;
 include_once 'helperFunctions.php';
 include_once 'SectionEvent.php';
 
@@ -14,6 +15,7 @@ public $bookTitle;
 public $bookAuthor;
 public $bookVersion;
 public $sectionEvents = array();
+public $sectionDtags = array();
 
 // Methods
 
@@ -65,6 +67,14 @@ function get_section_events() {
   return $this->sectionEvents;
 }
 
+function set_section_dTags($sectionDtags) {
+  $this->sectionDtags[] = $sectionDtags;
+}
+
+function get_section_dTags() {
+  return $this->sectionDtags;
+}
+
 /**
  * Create an index event and hang on the associated section events
  * Returns the eventID for the section event.
@@ -112,12 +122,16 @@ function publish_book()
                 $nextSection->set_section_title($sectionTitle);
         $nextSection->set_section_d_tag(construct_d_tag($this->get_book_title()."-".$nextSection->get_section_title()."-".$sectionNum, $nextSection->get_section_author(), $nextSection->get_section_version()));
         $nextSection->set_section_content(trim(trim(strval($section), $sectionTitle)));
-      $this->set_section_events($nextSection->create_section());
+        
+        $sectionData = $nextSection->create_section();       
+        $this->set_section_events($sectionData["eventID"]);
+        $this->set_section_dTags($sectionData["dTag"]);
 
       }
 
     // write the 30040 and add the new 30041s
-    $indexID = $this->create_book();
+    if($this->bookArguments[4]==='e') $indexID = $this->create_book_with_e_tags();
+    if($this->bookArguments[4]==='a') $indexID = $this->create_book_with_a_tags();
 
     // print a njump hyperlink to the 30040
     print "https://njump.me/".$indexID.PHP_EOL;
@@ -127,12 +141,56 @@ function publish_book()
 
 /**
  * Create an index event and hang on the associated section events.
- * Returns the index event ID.
+ * Returns the index as an event.
  *
  * @param BookEvent
  * @return string $resultID
  */
-function create_book()
+function create_book_with_a_tags()
+{
+  $kind = "30040";
+
+  // get public hex key
+  $keys = new Key();
+  $keyFile = getcwd()."/user/nostr-private.key";
+  $privateBech32 = trim(file_get_contents($keyFile));
+  $privateHex = $keys->convertToHex($privateBech32);
+  $publicHex = $keys->getPublicKey($privateHex);
+
+  $tags[] = ['d', $this->get_book_d_tag()];
+  $tags[] = ['title', $this->get_book_title()];
+  $tags[] = ['author', $this->get_book_author()];
+  $tags[] = ['version', $this->get_book_version()];
+  $tags[] = ['type', 'book'];
+  $tags[] = ['auto-update', 'yes'];
+  foreach ($this->get_section_events() as &$etags) {
+    $dTag = array_shift($this->sectionDtags);
+    $tags[] = ['a', '30041:'.$publicHex.':'.$dTag, 'wss://thecitadel.nostr1.com', $etags];
+    }
+  
+  $note = new Event();
+  $note->setKind($kind);
+  $note->setTags($tags);
+  $note->setContent("");
+
+  prepare_event_data($note);
+
+  // issue the eventID, pause to prevent the relay from balking, and retry on fail
+  $i = 0;
+  do {
+    $eventID = $note->getId();
+    $i++;
+    sleep(5);
+  } while (($i <= 10) && empty($eventID));
+
+  (empty($eventID)) ? throw new InvalidArgumentException('The book eventID was not created') : $eventID;
+
+  echo "Published ".$kind." event with ID ".$eventID.PHP_EOL.PHP_EOL;
+  print_event_data($kind, $eventID, $this->get_book_d_tag());
+  return $eventID;
+}
+
+function create_book_with_e_tags()
 {
   $kind = "30040";
 

@@ -10,7 +10,7 @@ final class IntegrationTest extends TestCase
     public function testSourcefileHasTwoHeaderLevels(): void
     {
         $testFile =  getcwd()."/src/testdata/AesopsFables_2Headers.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with e tags', 'e'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
@@ -22,7 +22,7 @@ final class IntegrationTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $testFile =  getcwd()."/src/testdata/AesopsFables_3Headers.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with e tags', 'e'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
@@ -33,7 +33,7 @@ final class IntegrationTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $testFile =  getcwd()."/src/testdata/AesopsFables_1Header.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with e tags', 'e'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
@@ -44,7 +44,7 @@ final class IntegrationTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $testFile =  getcwd()."/src/testdata/AesopsFables_0Headers.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with e tags', 'e'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
@@ -62,7 +62,7 @@ final class IntegrationTest extends TestCase
 
         // make sure that book can still be printed using the default Citadel relay.
         $testFile =  getcwd()."/src/testdata/AesopsFables_2Headers.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version'];
+        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with a tags', 'a'];
         $book = new BookEvent();
         $book->set_book_arguments($testArgv);
         $book->publish_book();
