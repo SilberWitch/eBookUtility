@@ -17,12 +17,7 @@ use swentel\nostr\CommandResultInterface;
  */
 function construct_d_tag($title, $author="unknown", $version="")
 {
-    // normalize the strings for the d tag
-    $title = strtolower(preg_replace("/[^a-zA-Z0-9\s,-]/", "", $title));
-    $author = strtolower(preg_replace("/[^a-zA-Z0-9\s,-]/", "", $author));
-    $version = strtolower(preg_replace("/[^a-zA-Z0-9\s,-]/", "", $version));
-
-    // replace the spaces with dashes
+    // replace the spaces with dashes and ensure UTF-8
     $dTagAuthor = strval(preg_replace('/\s+/', '-', $author));
     $dTagTitle = strval(preg_replace('/\s+/', '-', $title));
     $dTagVersion = strval(preg_replace('/\s+/', '-', $version));
@@ -32,6 +27,25 @@ function construct_d_tag($title, $author="unknown", $version="")
     } else {
         $dTag = $dTagTitle . "-by-" . $dTagAuthor . "-v-" . $dTagVersion;
     }
+
+    /**
+     * 
+     * d tag is mandatory, for publisher the following rules:
+     * consists of the title, author (if included), and version (if included)
+     * all words in ASCII or URL-enocoding (publisher converts from UTF-8, where necessary)
+     * words separated by a hyphen
+     * words normalized to lowercase, and all punctuation and whitespace removed, except “.”
+     * author preceeded with “by”
+     * version preceeded with “v”
+     * valid d-tags are therefore: 
+     * title
+     * title-by-author
+     * title-by-author-v-version
+     * Ex aesops-fables-by-aesop-v-5.0
+     *  
+     */
+
+    $dTag = utf8_encode((strtolower(preg_replace("/(?![.-])\p{P}/u", "", $dTag))));
 
     return $dTag;
 }
