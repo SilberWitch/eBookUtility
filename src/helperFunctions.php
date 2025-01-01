@@ -45,7 +45,7 @@ function construct_d_tag($title, $author="unknown", $version="")
      *  
      */
 
-    $dTag = utf8_encode((strtolower(preg_replace("/(?![.-])\p{P}/u", "", $dTag))));
+    $dTag = (strtolower(preg_replace("/(?![.-])\p{P}/u", "", utf8_encode($dTag))));
 
     return $dTag;
 }
