@@ -1,0 +1,9 @@
+= Relay Test: Realy
+
+== Purpose
+
+This is a test of writing directly to the relay *wss://mleku.realy.lol/*.
+
+If you can see this file, it means that the upload was successful and you are either reading from the same relay, or from a relay that has since copied the original test event.
+
+Happy reading!

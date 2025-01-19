@@ -163,6 +163,7 @@ function create_book_with_a_tags()
   $tags[] = ['version', $this->get_book_version()];
   $tags[] = ['type', 'book'];
   $tags[] = ['auto-update', 'yes'];
+  $tags[] = ['m', 'text/asciidoc'];
   foreach ($this->get_section_events() as &$etags) {
     $dTag = array_shift($this->sectionDtags);
     $tags[] = ['a', '30041:'.$publicHex.':'.$dTag, 'wss://thecitadel.nostr1.com', $etags];
@@ -199,6 +200,7 @@ function create_book_with_e_tags()
   $tags[] = ['author', $this->get_book_author()];
   $tags[] = ['version', $this->get_book_version()];
   $tags[] = ['type', 'book'];
+  $tags[] = ['m', 'text/asciidoc'];
   foreach ($this->get_section_events() as &$etags) {
     $tags[] = ['e', $etags];
   }
