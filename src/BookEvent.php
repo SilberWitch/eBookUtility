@@ -152,10 +152,9 @@ function create_book_with_a_tags()
 
   // get public hex key
   $keys = new Key();
-  $keyFile = getcwd()."/user/nostr-private.key";
-  $privateBech32 = trim(file_get_contents($keyFile));
-  $privateHex = $keys->convertToHex($privateBech32);
-  $publicHex = $keys->getPublicKey($privateHex);
+  $privateBech32 = getenv(name: 'NOSTR_SECRET_KEY');
+  $privateHex = $keys->convertToHex(key: $privateBech32);
+  $publicHex = $keys->getPublicKey(private_hex: $privateHex);
 
   $tags[] = ['d', $this->get_book_d_tag()];
   $tags[] = ['title', $this->get_book_title()];

@@ -11,9 +11,9 @@ Then run ```composer install``` to download the dependencies to a *vendor* folde
 
 ## Directions
 
-1. Open the folder *user*, create the file *nostr-private.key* and add your nsec to it.
-2. Then edit the file *relays.yml* containing your list of relays. We recommend keeping wss://thecitadel.nostr1.com in your list and adding at least one other, that you have write access to. If you remove all relays, the Citadel relay will be used as default. ```a``` tags will always contain thecitadel relay as relay hint.
-3. Decide whether you want your 30040 index to contain ```e``` tags or the newer ```a``` tag version (according to NIP-62). This is denoted by adding the corresponding letter to the end of the command line arguments. I recommend using ```a```.
+1. Save your Bech32 nsec in the environment variable with `export NOSTR_SECRET_KEY=nsec123`.
+2. Open the folder *user* and edit the file *relays.yml* containing your list of relays. We recommend keeping wss://thecitadel.nostr1.com in your list and adding at least one other, that you have write access to. If you remove all relays, the Citadel relay will be used as default. ```a``` tags will always contain thecitadel relay as relay hint.
+3. Decide whether you want your 30040 index to contain ```e``` tags or the newer ```a``` tag version (according to [NKBIP-01](https://wikistr.com/nkbip-01*fd208ee8c8f283780a9552896e4823cc9dc6bfd442063889577106940fd927c1)). This is denoted by adding the corresponding letter to the end of the command line arguments. I recommend using ```a```.
 4. Return to the main/upper folder, create an Asciidoc file entitled something like *MyShortBookTitle.adoc* and have it formatted with precisely two levels of headers.
 
 ```

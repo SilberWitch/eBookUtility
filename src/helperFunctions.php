@@ -45,7 +45,7 @@ function construct_d_tag($title, $author="unknown", $version="")
      *  
      */
 
-    $dTag = (strtolower(preg_replace("/(?![.-])\p{P}/u", "", utf8_encode($dTag))));
+    $dTag = (strtolower(preg_replace("/(?![.-])\p{P}/u", "", mb_convert_encoding($dTag, 'UTF-8', mb_list_encodings()))));
 
     return $dTag;
 }
@@ -58,10 +58,11 @@ function construct_d_tag($title, $author="unknown", $version="")
  */
 function prepare_event_data($note): array
 {
-    $keyFile = getcwd()."/user/nostr-private.key";
-    $privateKey = trim(file_get_contents($keyFile));
+    // pull environment variable containing key that is allowed to AUTH to this relay
+    // uses the same env name as NAK
+    $privateKey = getenv('NOSTR_SECRET_KEY');
 
-    // check to make sure that there is an nsec in the keyfile.
+    // check to make sure that there is an nsec in the privateKey string.
     (str_starts_with($privateKey, 'nsec') === false) ? throw new InvalidArgumentException('Please place your nsec in the nostr-private.key file.') : $privateKey;
 
     $relaysFile = getcwd()."/user/relays.yml";
