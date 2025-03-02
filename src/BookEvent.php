@@ -14,8 +14,8 @@ public $bookDTag;
 public $bookTitle;
 public $bookAuthor;
 public $bookVersion;
-public $sectionEvents = array();
-public $sectionDtags = array();
+public $sectionEvents = [];
+public $sectionDtags = [];
 
 // Methods
 
@@ -84,9 +84,11 @@ function get_section_dTags() {
 function publish_book()
 {
 
-    $markdown = "unset";
-    if(!$markdown = file_get_contents($this->bookArguments[1])) throw new InvalidArgumentException('The file could not be found.');
     $markdown = file_get_contents($this->bookArguments[1]);
+    if (!$markdown) {
+        throw new InvalidArgumentException('The file could not be found or is empty.');
+    }
+
     $this->set_book_author($this->bookArguments[2]);
     $this->set_book_version($this->bookArguments[3]);
     
@@ -183,8 +185,10 @@ function create_book_with_a_tags()
     sleep(5);
   } while (($i <= 10) && empty($eventID));
 
-  (empty($eventID)) ? throw new InvalidArgumentException('The book eventID was not created') : $eventID;
-
+  if (empty($eventID)) {
+            throw new InvalidArgumentException('The book eventID was not created');
+        }
+  
   echo "Published ".$kind." event with ID ".$eventID.PHP_EOL.PHP_EOL;
   print_event_data($kind, $eventID, $this->get_book_d_tag());
   return $eventID;

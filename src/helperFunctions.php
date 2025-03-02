@@ -66,17 +66,17 @@ function prepare_event_data($note): array
     (str_starts_with($privateKey, 'nsec') === false) ? throw new InvalidArgumentException('Please place your nsec in the nostr-private.key file.') : $privateKey;
 
     $relaysFile = getcwd()."/user/relays.yml";
-    $relaysRead = array();
+    $relaysRead = [];
     $relaysRead = file($relaysFile, FILE_IGNORE_NEW_LINES);
-    (empty($relaysRead)) ? ($relaysRead = ["wss://thecitadel.nostr1.com"]) : $relaysRead;
-
+    $relaysRead = empty($relaysRead) ? ["wss://thecitadel.nostr1.com"] : $relaysRead;
+    
     $signer = new Sign();
     $signer->signEvent($note, $privateKey);
   
     $eventMessage = new EventMessage($note);
 
+    $relays = [];
     foreach ($relaysRead as &$relay) {
-
         $relays[] = new Relay($relay);
     }
 
