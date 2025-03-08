@@ -79,11 +79,20 @@ function prepare_event_data($note): array
     foreach ($relaysRead as &$relay) {
         $relays[] = new Relay($relay);
     }
+    (empty($relays)) ? ($relays = ["wss://thecitadel.nostr1.com"]) : $relays;
 
     $relaySet = new RelaySet();
     $relaySet->setRelays($relays);
     $relaySet->setMessage($eventMessage);
-    $result = $relaySet->send();
+
+    try{
+        $result = $relaySet->send();
+    }catch(TypeError $e)
+    {
+        echo "Sending to relay did not work. Will be retried.";
+        sleep(10);
+        $result = $relaySet->send();
+    }
 
     return $result;
 }
