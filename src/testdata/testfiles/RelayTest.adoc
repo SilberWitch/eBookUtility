@@ -1,8 +1,8 @@
-= Relay Test: Land2
+= Relay Test: TheForest
 
 == Purpose
 
-This is a test of writing directly to the relay *wss://nostr.land/*.
+This is a test of writing directly to the relay *wss://theforest.nostr1.com*.
 
 If you can see this file, it means that the upload was successful and you are either reading from the same relay, or from a relay that has since copied the original test event.
 

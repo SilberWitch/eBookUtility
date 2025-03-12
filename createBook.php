@@ -6,24 +6,38 @@ include_once 'src/helperFunctions.php';
 
 echo PHP_EOL;
 
-// read in markdown file and arguments passed
-// write book into events
-$book = new BookEvent();
-$book->set_book_arguments($argv);
+// read in settings file argument passed
+$settingsfile = $argv[1];
+if (empty($settingsfile)) {
+    throw new InvalidArgumentException('The settings file argument is missing.');
+}
 
-if (empty($bookArguments[1])) {
+// check the contents of the file
+$settings = yaml_parse_file($settingsfile);
+if (empty($settings)) {
+    throw new InvalidArgumentException('The settings file is empty.');
+}
+if (empty($settings['file'])) {
     throw new InvalidArgumentException('The markdown file path is missing.');
 }
-if (empty($bookArguments[2])) {
+if (empty($settings['author'])) {
     throw new InvalidArgumentException('The author is missing.');
 }
-if (empty($bookArguments[3])) {
+if (empty($settings['version'])) {
     throw new InvalidArgumentException('The version is missing.');
 }
-if (empty($bookArguments[4]) || ($bookArguments[4] != 'e' || $bookArguments[4] != 'a')) {
-    throw new InvalidArgumentException('The event type (e/a) is missing.');
+if ($settings['tag-type'] != ('e' || 'a')) {
+    throw new InvalidArgumentException('The event type (e/a) is missing or wrong.');
+}
+if ($settings['auto-update'] != ('yes' || 'ask' || 'no')) {
+    throw new InvalidArgumentException('The auto-update option is missing or wrong.');
 }
 
+// Define book
+$book = new BookEvent();
+$book->set_book_settings($settings);
+
+// Write book into events
 try {
     $book->publish_book();
     echo "The book has been written.".PHP_EOL.PHP_EOL;

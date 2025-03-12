@@ -68,6 +68,8 @@ function create_section(): array
     ['d', $this->get_section_d_tag()],
     ['title', $this->get_section_title()],
     ['author', $this->get_section_author()],
+    ["m", "text/asciidoc"],
+    ["M", "article/publication-content/replaceable"],
   ]);
 
   prepare_event_data($note);

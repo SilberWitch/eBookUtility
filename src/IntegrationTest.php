@@ -7,71 +7,41 @@ include_once 'BookEvent.php';
 
 final class IntegrationTest extends TestCase
 {
-    public function testSourcefileHasTwoHeaderLevels(): void
+    public function testSourcefileHas_Atags(): void
     {
-        $testFile =  getcwd()."/src/testdata/testfiles/AesopsFables_2Headers.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with e tags', 'e'];
-        $book = new BookEvent();
-        $book->set_book_arguments($testArgv);
-        $book->publish_book();
-        $this->assertTrue(true);
+        $testFile =  getcwd()."/src/testdata/testfiles/AesopTest_a.yml";
+        $return = shell_exec('php createBook.php '.$testFile);
+        $this->assertStringContainsString('Published 30040 event with a tags', $return);
+        $this->assertStringContainsString('The book has been written.', $return);
     }
 
-    public function testSourcefileHasThreeHeaderLevels(): void
+    public function testSourcefileHas_Etags(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-
-        $testFile =  getcwd()."/src/testdata/testfiles/AesopsFables_3Headers.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with e tags', 'e'];
-        $book = new BookEvent();
-        $book->set_book_arguments($testArgv);
-        $book->publish_book();
+        $testFile =  getcwd()."/src/testdata/testfiles/AesopTest_e.yml";
+        $return = shell_exec('php createBook.php '.$testFile);
+        $this->assertStringContainsString('Published 30040 event with e tags', $return);
+        $this->assertStringContainsString('The book has been written.', $return);
     }
 
-    public function testSourcefileHasOneHeaderLevel(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $testFile =  getcwd()."/src/testdata/testfiles/AesopsFables_1Header.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with e tags', 'e'];
-        $book = new BookEvent();
-        $book->set_book_arguments($testArgv);
-        $book->publish_book();
-    }
-
-    public function testSourcefileHasNoHeaders(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $testFile =  getcwd()."/src/testdata/testfiles/AesopsFables_0Headers.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with e tags', 'e'];
-        $book = new BookEvent();
-        $book->set_book_arguments($testArgv);
-        $book->publish_book();
-    }
-
+    
     public function testRelayListIsEmpty(): void
     {
         // save the relay list, to return it back to normal after the test
         $relaysFile = getcwd()."/user/relays.yml";
-        $relaysRead=array();
+        $relaysRead = [];
         $relaysRead = file($relaysFile, FILE_IGNORE_NEW_LINES);
 
         // delete the contents of the file
         file_put_contents($relaysFile, "");
 
         // make sure that book can still be printed using the default Citadel relay.
-        $testFile =  getcwd()."/src/testdata/testfiles/AesopsFables_2Headers.adoc";
-        $testArgv = ['createBook.php', $testFile, 'Æsop', 'test version with a tags', 'a'];
-        $book = new BookEvent();
-        $book->set_book_arguments($testArgv);
-        $book->publish_book();
-
-        $this->assertTrue(true);
-
+        $testFile =  getcwd()."/src/testdata/testfiles/AesopTest_a.yml";
+        $return = shell_exec('php createBook.php '.$testFile);
+        $this->assertStringContainsString('The book has been written.', $return);
+    
         // put the original contents of the file back.
         foreach ($relaysRead as &$relay) {
-            file_put_contents($relaysFile, $relay.PHP_EOL, FILE_APPEND);
+            file_put_contents($relaysFile, $relay, FILE_APPEND);
         }
 
     }

@@ -1,0 +1,45 @@
+# MANDATORY ITEMS
+# Without these four items, the uploader will throw an error and stop.
+
+# The file that contains the full book data. The book title will be pulled from the first header in the file.
+file: 'MyShortBookTitle.adoc'
+
+# Who wrote the original book, contained in the file?
+author: 'unkown'
+
+# What book edition is it? '1' is the default and will not display on the Alexandria index cards.
+version: '1'
+
+# This is flag for having 'e' or 'a' tag types, so permanent or replaceable index items. We recommend using 'a', as that encompasses 'e' and the event ID will still be included.
+tag-type: 'a'
+
+# Determines whether the events contained within the 30040 will be automatically-updated to the new version, if they are changed.
+# Options are <yes|ask|no>.
+auto-update: 'yes'
+
+# OPTIONAL ITEMS
+# You can include as many of these, as you like, and they will simply be appended as tag-value pairs. If you write nonsense, the tags will contain nonsense, and will be ignored. You can remove any you do not wish to use, or add new ones.
+
+tags:
+# Cover image, that Alexandria will use for the index cards and when exporting to ePUB format.
+  - ['image', 'imagefile.jpg']
+# document content-type for the publication
+# choices are: book (default), Bible, illustrated, magazine, documentation, academic, blog, flyer, scroll
+  - ['type', 'book']
+# document instructions for the stylesheet of the viewer. The default is set here.
+  - ['l', 'en, ISO-639-1']
+  - ['reading-direction', 'left-to-right, top-to-bottom']
+# The genre of the publication, to be added as a hashtag. Add a new 't:' line for each hashtag.
+  - ['t', 'novel']
+  - ['t', 'classical']
+# Human-readable paragraph describing the text. This will be displayed within the index card.
+  - ['summary', 'This is a description of this book.']
+# publishing data
+  - ['i', 'isbn:978...']
+  - ['published_on', 'yyyy-mm-dd']
+  - ['published_by', 'public domain']
+# source of the data, if the source is a Nostr event.
+  - ['p', '<hex pubkey>']
+  - ['E', '<original event ID>, <relay URL>, <hex pubkey>']
+# source of the data, if the source is a website
+  - ['source', 'https://website.com/article19484']

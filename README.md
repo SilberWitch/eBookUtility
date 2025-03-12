@@ -13,7 +13,7 @@ Then run ```composer install``` to download the dependencies to a *vendor* folde
 
 1. Save your Bech32 nsec in the environment variable with `export NOSTR_SECRET_KEY=nsec123`.
 2. Open the folder *user* and edit the file *relays.yml* containing your list of relays. We recommend keeping wss://thecitadel.nostr1.com in your list and adding at least one other, that you have write access to. If you remove all relays, the Citadel relay will be used as default. ```a``` tags will always contain thecitadel relay as relay hint.
-3. Decide whether you want your 30040 index to contain ```e``` tags or the newer ```a``` tag version (according to [NKBIP-01](https://wikistr.com/nkbip-01*fd208ee8c8f283780a9552896e4823cc9dc6bfd442063889577106940fd927c1)). This is denoted by adding the corresponding letter to the end of the command line arguments. I recommend using ```a```.
+3. Copy the file in the *user* folder called *settings_template.yml* and paste it into the same folder, giving it a name similar to your publication title. Edit the information within and remove/add any optional tags.
 4. Return to the main/upper folder, create an Asciidoc file entitled something like *MyShortBookTitle.adoc* and have it formatted with precisely two levels of headers.
 
 ```
@@ -28,12 +28,11 @@ text that you want displayed as content
 more text
 ```
 
-5. On the command line, enter 
+5. On the command line, enter the program name and the name of your settings file.
 
-```php createBook.php MyShortBookTitle.adoc "Author Name" "book version" a```
+```php createBook.php user/MyShortBookSettings.yml```
 
-6. Make sure to replace the filename with the file you want to use and the author name with the name or npub of the person/entity that should be listed as the author in the 30040 event. The book version is the edition, translation, etc. of the book. The _a_ denotes that you want the replaceable ```a``` tags.
-7. All of the event metadata will be added to the *eventsCreated.txt* file.
+6. All of the event metadata will be added to the *eventsCreated.txt* file.
 8. The 30040 eventID will be sent to stdout (usually the command line) in the form of an njump hyperlink. The link will not work, if you wrote to a local relay, but you can still see the eventID.
 
 ## Integration Test
