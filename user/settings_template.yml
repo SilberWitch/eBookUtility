@@ -1,11 +1,11 @@
 # MANDATORY ITEMS
-# Without these four items, the uploader will throw an error and stop.
+# Without these five items, the uploader will throw an error and stop.
 
 # The file that contains the full book data. The book title will be pulled from the first header in the file.
 file: 'MyShortBookTitle.adoc'
 
 # Who wrote the original book, contained in the file?
-author: 'unkown'
+author: 'unknown'
 
 # What book edition is it? '1' is the default and will not display on the Alexandria index cards.
 version: '1'
